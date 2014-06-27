@@ -10,24 +10,26 @@ final String TREASURE_KEY = 'pirateName';
 
 ButtonElement genButton;
 
-void  main() {
+void main() {
   querySelector('#inputName').onInput.listen(updateBadge);
   genButton = querySelector('#generateButton');
   genButton.onClick.listen(generateBadge);
-  
+
   setBadgeName(getBadgeNameFromStorage());
 }
 
 void updateBadge(Event e) {
   String inputName = (e.target as InputElement).value;
-  
+
   setBadgeName(new PirateName(firstName: inputName));
   if (inputName.trim().isEmpty) {
-    genButton..disabled = false
-             ..text = 'Aye! Gimme a name!';
+    genButton
+        ..disabled = false
+        ..text = 'Aye! Gimme a name!';
   } else {
-    genButton..disabled = true
-             ..text = 'Arrr! Write yer name!';
+    genButton
+        ..disabled = true
+        ..text = 'Arrr! Write yer name!';
   }
 }
 
@@ -53,7 +55,7 @@ PirateName getBadgeNameFromStorage() {
 }
 
 class PirateName {
-  
+
   static final Random indexGen = new Random();
 
   String _firstName;
@@ -84,10 +86,6 @@ class PirateName {
 
   String get pirateName => _firstName.isEmpty ? '' : '$_firstName the $_appellation';
 
-  static final List names = [
-    'Anne', 'Mary', 'Jack', 'Morgan', 'Roger',
-    'Bill', 'Ragnar', 'Ed', 'John', 'Jane' ];
-  static final List appellations = [
-    'Jackal', 'King', 'Red', 'Stalwart', 'Axe',
-    'Young', 'Brave', 'Eager', 'Wily', 'Zesty'];
+  static final List names = ['Anne', 'Mary', 'Jack', 'Morgan', 'Roger', 'Bill', 'Ragnar', 'Ed', 'John', 'Jane'];
+  static final List appellations = ['Jackal', 'King', 'Red', 'Stalwart', 'Axe', 'Young', 'Brave', 'Eager', 'Wily', 'Zesty'];
 }

@@ -29,37 +29,37 @@ final String TREASURE_KEY = 'pirateName';
 ButtonElement genButton;
 SpanElement badgeNameElement;
 
-void  main() {
+void main() {
   InputElement inputField = querySelector('#inputName');
   inputField.onInput.listen(updateBadge);
   genButton = querySelector('#generateButton');
   genButton.onClick.listen(generateBadge);
-  
+
   badgeNameElement = querySelector('#badgeName');
-  
-  PirateName.readyThePirates()
-    .then((_) {
-      //on success
-      inputField.disabled = false; //enable
-      genButton.disabled = false;  //enable
-      setBadgeName(getBadgeNameFromStorage());
-    })
-    .catchError((arrr) {
-      print('Error initializing pirate names: $arrr');
-      badgeNameElement.text = 'Arrr! No names.';
-    });
+
+  PirateName.readyThePirates().then((_) {
+    //on success
+    inputField.disabled = false; //enable
+    genButton.disabled = false; //enable
+    setBadgeName(getBadgeNameFromStorage());
+  }).catchError((arrr) {
+    print('Error initializing pirate names: $arrr');
+    badgeNameElement.text = 'Arrr! No names.';
+  });
 }
 
 void updateBadge(Event e) {
   String inputName = (e.target as InputElement).value;
-  
+
   setBadgeName(new PirateName(firstName: inputName));
   if (inputName.trim().isEmpty) {
-    genButton..disabled = false
-             ..text = 'Aye! Gimme a name!';
+    genButton
+        ..disabled = false
+        ..text = 'Aye! Gimme a name!';
   } else {
-    genButton..disabled = true
-             ..text = 'Arrr! Write yer name!';
+    genButton
+        ..disabled = true
+        ..text = 'Arrr! Write yer name!';
   }
 }
 
@@ -85,7 +85,7 @@ PirateName getBadgeNameFromStorage() {
 }
 
 class PirateName {
-  
+
   static final Random indexGen = new Random();
 
   static List<String> names = [];
@@ -93,9 +93,9 @@ class PirateName {
 
   String _firstName;
   String _appellation;
-  
+
   PirateName({String firstName, String appellation}) {
-    
+
     if (firstName == null) {
       _firstName = names[indexGen.nextInt(names.length)];
     } else {
@@ -116,16 +116,18 @@ class PirateName {
 
   String toString() => pirateName;
 
-  String get jsonString => JSON.encode({"f": _firstName, "a": _appellation});
+  String get jsonString => JSON.encode({
+    "f": _firstName,
+    "a": _appellation
+  });
 
   String get pirateName => _firstName.isEmpty ? '' : '$_firstName the $_appellation';
 
   static Future readyThePirates() {
     String path = 'piratenames.json';
-    return HttpRequest.getString(path)
-        .then(_parsePirateNamesFromJSON);
+    return HttpRequest.getString(path).then(_parsePirateNamesFromJSON);
   }
-  
+
   static _parsePirateNamesFromJSON(String jsonString) {
     Map pirateNames = JSON.decode(jsonString);
     names = pirateNames['names'];
